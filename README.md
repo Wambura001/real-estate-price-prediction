@@ -4,6 +4,9 @@ An automated valuation model (AVM) built using the benchmarking Ames Housing dat
 
 ---
 
+![image](assets/img01.png)
+![image](assets/img02.png)
+
 ## Core Performance Matrix
 
 The target feature (`SalePrice`) was processed using a natural logarithmic transformation \([\ln(y+1)]\) to mitigate severe right-skew distributions driven by extreme high-value assets. Models were validated on a strict 80/20 train/test partition using Mean Absolute Error (MAE) and Coefficient of Determination (R²).
@@ -93,8 +96,11 @@ Decision trees (the structural components within Random Forests, Gradient Boosti
 Through Mean Decrease in Impurity (MDI) calculations extracted via the Random Forest architecture, Overall Qual (Overall Material and Finish Quality) emerged as the dominant global feature driving real estate valuations.
 
 [Overall Qual]   ██████████████████████████████████ 100% Importance
+
 [Gr Liv Area]    ████████████████████ 61% Importance
+
 [Total Bsmt SF]  ██████████████ 42% Importance
+
 [Garage Cars]    ████████████ 36% Importance
 
 From an asset appraisal framework, this confirms that institutional property valuation relies heavily on property status assets (Structural Quality and Ground Living Area) over peripheral spatial elements (e.g., lot geometry or minor amenities).

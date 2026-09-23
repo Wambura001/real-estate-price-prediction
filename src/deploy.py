@@ -11,8 +11,18 @@ from sklearn.impute import SimpleImputer
 def train_and_serialize_production_model():
     print("Commencing Production Pipeline Assembly...")
     
-    # 1. Load Data
-    data_path = '../data/raw/ames_housing_raw.csv'
+    # Get the exact absolute path of the directory containing THIS deploy.py script
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    
+    # Construct paths relative to the script location (stepping up one level out of 'src')
+    data_path = os.path.join(BASE_DIR, '..', 'data', 'raw', 'ames_housing_raw.csv')
+    model_output_dir = os.path.join(BASE_DIR, '..', 'models')
+    model_output_file = os.path.join(model_output_dir, 'valuation_engine_pipeline.joblib')
+    
+    # Normalize paths so Windows reads them correctly
+    data_path = os.path.normpath(data_path)
+    model_output_file = os.path.normpath(model_output_file)
+    
     if not os.path.exists(data_path):
         raise FileNotFoundError(f"Missing base training data array at path: {data_path}")
         
@@ -59,18 +69,18 @@ def train_and_serialize_production_model():
     production_pipeline.fit(X, y_log)
     
     # 6. Serialize and Save Pipeline to Disk
-    os.makedirs('../models', exist_ok=True)
-    model_output_file = '../models/valuation_engine_pipeline.joblib'
+    os.makedirs(os.path.normpath(model_output_dir), exist_ok=True)
     joblib.dump(production_pipeline, model_output_file)
     print(f"Production artifact successfully saved to: {model_output_file}")
     return production_pipeline
+
 
 
 def simulate_real_time_inference(trained_pipeline):
     print("\nTesting Real-Time Inference Mock Application...")
     
     # Load raw file just to extract a sample record structure for demonstration
-    sample_df = pd.read_csv('../data/raw/ames_housing_raw.csv').drop(columns=['SalePrice', 'Id'], errors='ignore')
+    sample_df = pd.read_csv(os.path.normpath(os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'data', 'raw', 'ames_housing_raw.csv'))).drop(columns=['SalePrice', 'Id'], errors='ignore')
     single_property_query = sample_df.iloc[[0]].copy() # Isolate row 0 as a raw customer input dictionary
     
     # Execution Block for Real-Time Inference
